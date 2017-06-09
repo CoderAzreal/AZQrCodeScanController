@@ -53,11 +53,61 @@
 // MARK: - 生命周期
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:_scanView];
-    _device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:self.view.layer];
-    _device.complete = _scanCompleteBlock;
     
+    [self requestCaptureAuth];
+    
+}
+
+- (void)requestCaptureAuth {
+    __weak AZQrCodeScanController *wkSelf = self;
+    
+    AVAuthorizationStatus state = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    switch (state) {
+        case AVAuthorizationStatusNotDetermined: {
+            // 用户还没有决定是否给相机授权
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (granted) {
+                        // 用户接受
+                        wkSelf.device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:wkSelf.view.layer];
+                        wkSelf.device.complete = wkSelf.scanCompleteBlock;
+                    } else {
+                        // 用户拒绝
+                        [wkSelf showPrompt];
+                    }
+                });
+            }];
+        }
+            break;
+        case AVAuthorizationStatusDenied:
+        case AVAuthorizationStatusRestricted:
+            // 用户拒绝相机授权或没有相机权限
+            [self showPrompt];
+            break;
+        case AVAuthorizationStatusAuthorized:
+            // 授权
+            _device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:self.view.layer];
+            _device.complete = _scanCompleteBlock;
+            break;
+    }
+}
+
+- (void)showPrompt {
+    
+    _scanView.hidden = true;
+    
+    UILabel *promptView = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, AZ_SCREENWIDTH-40, 300)];
+    promptView.textAlignment = NSTextAlignmentCenter;
+    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    if (!appName) {
+        appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+    }
+    promptView.text = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"中允许%@访问您的相机", appName];
+    promptView.numberOfLines = 0;
+    [self.view addSubview:promptView];
+
 }
 
 - (void)dealloc {
