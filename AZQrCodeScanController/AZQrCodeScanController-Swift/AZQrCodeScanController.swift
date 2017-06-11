@@ -127,7 +127,9 @@ class AZQrCodeScanController: UIViewController {
             AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {
                 let ws = wkSelf!
                 if $0 {
-                    deviceWork()
+                    DispatchQueue.main.async {
+                        deviceWork()
+                    }
                 } else {
                     // 用户拒绝
                     ws.showPrompt()
