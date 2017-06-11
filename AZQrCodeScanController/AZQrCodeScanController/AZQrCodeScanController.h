@@ -66,6 +66,11 @@
 @property (nonatomic, assign) CGRect introduceFrame;
 
 /**
+ 无拍照权限时提示的appname
+ */
+@property (nonatomic, copy) NSString *appName;
+
+/**
  初始化方法(默认扫码区宽高为屏幕宽度-100, 居中显示)
  
  @param complete 扫码成功后回调

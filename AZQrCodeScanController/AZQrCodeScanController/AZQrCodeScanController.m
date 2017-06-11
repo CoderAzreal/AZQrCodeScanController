@@ -108,13 +108,15 @@
     
     UILabel *promptView = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, AZ_SCREENWIDTH-40, 300)];
     promptView.textAlignment = NSTextAlignmentCenter;
-    NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-    if (!appName) {
-        appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
-    }
+    
     NSString *promptText = nil;
     if (text == nil) {
-        promptText = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"中允许%@访问您的相机", appName];
+        if (!_appName) {
+            _appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"] ?
+            [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"] :
+            [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
+        }
+        promptText = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"中允许%@访问您的相机", _appName];
     } else {
         promptText = text;
     }

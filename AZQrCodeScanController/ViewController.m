@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AZQrCodeScanController.h"
+#import "AZQrCodeScanController-Swift.h"
 
 @interface ViewController ()
 
@@ -28,6 +28,7 @@
     AZQrCodeScanController *c = [[AZQrCodeScanController alloc] initWithScanComplete:^(NSString *result) {
         NSLog(@"result");
     }];
+    c.appName = @"这个app";
     [self presentViewController:c animated:true completion:nil];
 }
 

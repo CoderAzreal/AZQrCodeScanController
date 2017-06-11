@@ -16,49 +16,52 @@ private let scanImageLeftPadding: CGFloat = 50.0
 public class AZQrCodeScanController: UIViewController {
     
     /// 扫码线图片
-    var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
+    public var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
     
     /// 扫码框图片
-    var scanImage: UIImage? { didSet { scanView.scanImageView.image = scanImage } }
+    public var scanImage: UIImage? { didSet { scanView.scanImageView.image = scanImage } }
     
     /// 扫码框和扫码线颜色
-    var tintColor: UIColor! { didSet {
+    public var tintColor: UIColor! { didSet {
         scanView.scanImageView.tintColor = scanColor
         scanView.scanLine.tintColor = scanColor
         } }
     
     /// 单独设置扫码框颜色
-    var scanColor: UIColor! { didSet { scanView.scanImageView.tintColor = scanColor } }
+    public var scanColor: UIColor! { didSet { scanView.scanImageView.tintColor = scanColor } }
     
     /// 单独设置扫码线颜色
-    var scanLineColor: UIColor! { didSet { scanView.scanLine.tintColor = scanLineColor } }
+    public var scanLineColor: UIColor! { didSet { scanView.scanLine.tintColor = scanLineColor } }
     
     /// 遮罩层透明度
-    var coverViewAlpha: CGFloat! { didSet {
+    public var coverViewAlpha: CGFloat! { didSet {
         for item in [scanView.topCoverView, scanView.leftCoverView, scanView.bottomCoverView, scanView.rightCoverView] {
             item.alpha = coverViewAlpha
         } } }
     
     /// 提示文字
-    var introduceText: String? { didSet { scanView.introduceLabel.text = introduceText } }
+    public var introduceText: String? { didSet { scanView.introduceLabel.text = introduceText } }
     
     /// 提示文字字体大小
-    var introduceFontSize: CGFloat! { didSet {
+    public var introduceFontSize: CGFloat! { didSet {
         scanView.introduceLabel.font = UIFont.systemFont(ofSize: introduceFontSize)
         scanView.introduceLabel.sizeToFit()
         } }
     
     /// 提示文字字体
-    var introduceFont: UIFont! { didSet {
+    public var introduceFont: UIFont! { didSet {
         scanView.introduceLabel.font = introduceFont
         scanView.introduceLabel.sizeToFit()
         } }
     
     /// 提示文字颜色
-    var introduceTextColor: UIColor! { didSet { scanView.introduceLabel.textColor = introduceTextColor } }
+    public var introduceTextColor: UIColor! { didSet { scanView.introduceLabel.textColor = introduceTextColor } }
     
     /// 提示文字位置
-    var introduceFrame: CGRect! { didSet { scanView.introduceLabel.frame = introduceFrame } }
+    public var introduceFrame: CGRect! { didSet { scanView.introduceLabel.frame = introduceFrame } }
+    
+    /// 无拍照权限时提示的appname
+    public var appName: String?
     
     
     /// 扫码框位置
@@ -70,6 +73,9 @@ public class AZQrCodeScanController: UIViewController {
     private var device: AZQrCodeScanDevice?
     private var scanView: AZQrCodeScanView!
     
+    /// 初始化方法 默认扫码区域为屏幕宽度-100 居中显示
+    ///
+    /// - Parameter scanComplete: 扫码完成后回调
     public convenience init(scanComplete: ((String)->())?) {
         self.init(nibName: nil, bundle: nil)
         let width = AZ_screenWidth-scanImageLeftPadding*2
@@ -81,6 +87,11 @@ public class AZQrCodeScanController: UIViewController {
         self.complete = scanComplete
     }
     
+    /// 初始化方法
+    ///
+    /// - Parameters:
+    ///   - scanFrame: 自定义扫码区域
+    ///   - complete: 扫码完成回调
     public convenience init(scanFrame: CGRect, complete: ((String)->())?) {
         self.init(nibName: nil, bundle: nil)
         self.scanFrame = scanFrame
@@ -88,7 +99,7 @@ public class AZQrCodeScanController: UIViewController {
         self.complete = complete
     }
     
-    override public func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(scanView)
@@ -136,12 +147,14 @@ public class AZQrCodeScanController: UIViewController {
         
         let promptLabel = UILabel(frame: CGRect(x: 20, y: 0, width: AZ_screenWidth-40, height: 300))
         promptLabel.textAlignment = .center
-        var appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
         if appName == nil {
-            appName = Bundle.main.infoDictionary?["CFBundleName"] as? String
-        }
-        if appName == nil {
-            appName = "本app"
+            appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
+            if appName == nil {
+                appName = Bundle.main.infoDictionary?["CFBundleName"] as? String
+            }
+            if appName == nil {
+                appName = "本app"
+            }
         }
         promptLabel.text = text ?? "请在iPhone的\"设置-隐私-相机\"中允许\(appName!)访问您的相机"
         promptLabel.numberOfLines = 0
