@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5042A8BD1EECE35B004E06E7 /* AZQrCodeScanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042A8BC1EECE35B004E06E7 /* AZQrCodeScanController.swift */; };
+		5042A8BD1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */; };
 		50B21DC31EEA749600F07A12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC21EEA749600F07A12 /* main.m */; };
 		50B21DC61EEA749600F07A12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC51EEA749600F07A12 /* AppDelegate.m */; };
 		50B21DC91EEA749600F07A12 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC81EEA749600F07A12 /* ViewController.m */; };
@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5042A8BC1EECE35B004E06E7 /* AZQrCodeScanController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZQrCodeScanController.swift; sourceTree = "<group>"; };
+		5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanController.swift; sourceTree = "<group>"; };
 		50B21DBE1EEA749600F07A12 /* AZQrCodeScanController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZQrCodeScanController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B21DC21EEA749600F07A12 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50B21DC41EEA749600F07A12 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 		5042A8BB1EECE35B004E06E7 /* AZQrCodeScanController-Swift */ = {
 			isa = PBXGroup;
 			children = (
-				5042A8BC1EECE35B004E06E7 /* AZQrCodeScanController.swift */,
+				5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */,
 			);
 			path = "AZQrCodeScanController-Swift";
 			sourceTree = "<group>";
@@ -195,7 +195,7 @@
 				50B21DED1EEA74D800F07A12 /* AZQrCodeScanController.m in Sources */,
 				50B21DC61EEA749600F07A12 /* AppDelegate.m in Sources */,
 				50B21DC31EEA749600F07A12 /* main.m in Sources */,
-				5042A8BD1EECE35B004E06E7 /* AZQrCodeScanController.swift in Sources */,
+				5042A8BD1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name = "AZQrCodeScanController"
-s.version = "1.0.4"
+s.version = "1.0.6"
 s.ios.deployment_target = '8.0'
 s.summary = "iOS原生扫码控制器"
 s.homepage = "https://github.com/CoderAzreal/AZQrCodeScanController"

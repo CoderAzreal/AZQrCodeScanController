@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, LineMoveDirect) {
 
 - (void)configScanUI {
     
-    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"AZQrCode" ofType:@"bundle"];
+    NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AZQrCode" ofType:@"bundle"];
     NSBundle *captureBundle = [NSBundle bundleWithPath:bundlePath];
     
     _scanImageView = [[UIImageView alloc] initWithFrame:_scanFrame];

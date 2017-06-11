@@ -1,6 +1,6 @@
 //
-//  AZQrCodeCapture.swift
-//  AZQrCodeCapture
+//  AZSwiftQRCodeCapture.swift
+//  AZSwiftQRCodeCapture
 //
 //  Created by tianfengyu on 2017/5/21.
 //  Copyright © 2017年 tianfengyu. All rights reserved.
@@ -13,7 +13,7 @@ private let AZ_screenWidth = UIScreen.main.bounds.width
 private let AZ_screenHeight = UIScreen.main.bounds.height
 private let scanImageLeftPadding: CGFloat = 50.0
 
-class AZQrCodeScanController: UIViewController {
+public class AZSwiftQRCodeScanController: UIViewController {
     
     /// 扫码线图片
     public var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
@@ -70,8 +70,8 @@ class AZQrCodeScanController: UIViewController {
     /// 扫码完成回调
     private var complete: ((String)->())?
     
-    private var device: AZQrCodeScanDevice?
-    private var scanView: AZQrCodeScanView!
+    private var device: AZSwiftQRCodeScanDevice?
+    private var scanView: AZSwiftQRCodeScanView!
     
     /// 初始化方法 默认扫码区域为屏幕宽度-100 居中显示
     ///
@@ -83,7 +83,7 @@ class AZQrCodeScanController: UIViewController {
                                 y: (AZ_screenHeight-width)/2,
                                 width: width,
                                 height: width)
-        scanView = AZQrCodeScanView(scanFrame: self.scanFrame)
+        scanView = AZSwiftQRCodeScanView(scanFrame: self.scanFrame)
         self.complete = scanComplete
     }
     
@@ -95,7 +95,7 @@ class AZQrCodeScanController: UIViewController {
     public convenience init(scanFrame: CGRect, complete: ((String)->())?) {
         self.init(nibName: nil, bundle: nil)
         self.scanFrame = scanFrame
-        scanView = AZQrCodeScanView(scanFrame: self.scanFrame)
+        scanView = AZSwiftQRCodeScanView(scanFrame: self.scanFrame)
         self.complete = complete
     }
     
@@ -110,7 +110,7 @@ class AZQrCodeScanController: UIViewController {
         
         func deviceWork() {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                device = AZQrCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
+                device = AZSwiftQRCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
                 device?.complete = complete
             } else {
                 showPrompt(text: "当前设备没有拍照功能")
@@ -180,7 +180,7 @@ class AZQrCodeScanController: UIViewController {
     }
 }
 
-private class AZQrCodeScanView: UIView {
+private class AZSwiftQRCodeScanView: UIView {
     var topCoverView = UIView()
     var leftCoverView = UIView()
     var rightCoverView = UIView()
@@ -237,7 +237,7 @@ private class AZQrCodeScanView: UIView {
     /// 扫码框/扫码线/介绍文字
     private func configScanUI() {
         
-        let bundlePath = Bundle.main.path(forResource: "AZQrCode", ofType: "bundle")!
+        let bundlePath = Bundle(for: classForCoder).path(forResource: "AZSwiftQRCode", ofType: "bundle")!
         let captureBundle = Bundle(path: bundlePath)!
         
         scanImageView = UIImageView(frame: scanFrame)
@@ -281,7 +281,7 @@ private class AZQrCodeScanView: UIView {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
-private class AZQrCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+private class AZSwiftQRCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     private var device: AVCaptureDevice!
     private var input: AVCaptureDeviceInput!
