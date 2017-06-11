@@ -13,7 +13,7 @@ private let AZ_screenWidth = UIScreen.main.bounds.width
 private let AZ_screenHeight = UIScreen.main.bounds.height
 private let scanImageLeftPadding: CGFloat = 50.0
 
-public class AZQrCodeScanController: UIViewController {
+class AZQrCodeScanController: UIViewController {
     
     /// 扫码线图片
     public var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }

@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AZQrCodeScanController-Swift.h"
+#import "AZQrCodeScanController.h"
 
 @interface ViewController ()
 
