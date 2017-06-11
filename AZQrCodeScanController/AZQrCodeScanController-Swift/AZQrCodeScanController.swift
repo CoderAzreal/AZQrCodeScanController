@@ -13,7 +13,7 @@ private let AZ_screenWidth = UIScreen.main.bounds.width
 private let AZ_screenHeight = UIScreen.main.bounds.height
 private let scanImageLeftPadding: CGFloat = 50.0
 
-class AZQrCodeScanController: UIViewController {
+public class AZQrCodeScanController: UIViewController {
     
     /// 扫码线图片
     var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
@@ -70,7 +70,7 @@ class AZQrCodeScanController: UIViewController {
     private var device: AZQrCodeScanDevice?
     private var scanView: AZQrCodeScanView!
     
-    public convenience init(complete: ((String)->())?) {
+    public convenience init(scanComplete: ((String)->())?) {
         self.init(nibName: nil, bundle: nil)
         let width = AZ_screenWidth-scanImageLeftPadding*2
         self.scanFrame = CGRect(x: (AZ_screenWidth-width)/2,
@@ -78,7 +78,7 @@ class AZQrCodeScanController: UIViewController {
                                 width: width,
                                 height: width)
         scanView = AZQrCodeScanView(scanFrame: self.scanFrame)
-        self.complete = complete
+        self.complete = scanComplete
     }
     
     public convenience init(scanFrame: CGRect, complete: ((String)->())?) {
@@ -88,17 +88,71 @@ class AZQrCodeScanController: UIViewController {
         self.complete = complete
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         view.addSubview(scanView)
-        device = AZQrCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
-        device?.complete = complete
+        requestCaptureAuth()
+    }
+    
+    private func requestCaptureAuth() {
+        
+        func deviceWork() {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                device = AZQrCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
+                device?.complete = complete
+            } else {
+                showPrompt(text: "当前设备没有拍照功能")
+            }
+        }
+        
+        weak var wkSelf = self
+        
+        let state = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+        switch state {
+        case .notDetermined:
+            // 用户还没有决定是否给相机授权
+            
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {
+                let ws = wkSelf!
+                if $0 {
+                    deviceWork()
+                } else {
+                    // 用户拒绝
+                    ws.showPrompt()
+                }
+            }
+        case .denied, .restricted:
+            // 用户拒绝相机授权
+            showPrompt()
+        case .authorized:
+            // 用户同意授权
+            deviceWork()
+        }
+    }
+    
+    private func showPrompt(text: String? = nil) {
+        scanView.isHidden = true
+        
+        let promptLabel = UILabel(frame: CGRect(x: 20, y: 0, width: AZ_screenWidth-40, height: 300))
+        promptLabel.textAlignment = .center
+        var appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
+        if appName == nil {
+            appName = Bundle.main.infoDictionary?["CFBundleName"] as? String
+        }
+        if appName == nil {
+            appName = "本app"
+        }
+        promptLabel.text = text ?? "请在iPhone的\"设置-隐私-相机\"中允许\(appName!)访问您的相机"
+        promptLabel.numberOfLines = 0
+        view.addSubview(promptLabel)
+        
     }
     
     private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     deinit {

@@ -71,11 +71,10 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (granted) {
                         // 用户接受
-                        wkSelf.device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:wkSelf.view.layer];
-                        wkSelf.device.complete = wkSelf.scanCompleteBlock;
+                        [wkSelf deviceWork];
                     } else {
                         // 用户拒绝
-                        [wkSelf showPrompt];
+                        [wkSelf showPrompt:nil];
                     }
                 });
             }];
@@ -84,17 +83,26 @@
         case AVAuthorizationStatusDenied:
         case AVAuthorizationStatusRestricted:
             // 用户拒绝相机授权或没有相机权限
-            [self showPrompt];
+            [self showPrompt:nil];
             break;
         case AVAuthorizationStatusAuthorized:
             // 授权
-            _device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:self.view.layer];
-            _device.complete = _scanCompleteBlock;
+            [self deviceWork];
             break;
     }
 }
 
-- (void)showPrompt {
+- (void)deviceWork {
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        _device = [[AZQrCodeScanDevice alloc] initWithScanFrame:_scanFrame layer:self.view.layer];
+        _device.complete = _scanCompleteBlock;
+    } else {
+        [self showPrompt:@"当前设备没有拍照功能"];
+    }
+    
+}
+
+- (void)showPrompt:(NSString *)text {
     
     _scanView.hidden = true;
     
@@ -104,7 +112,13 @@
     if (!appName) {
         appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     }
-    promptView.text = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"中允许%@访问您的相机", appName];
+    NSString *promptText = nil;
+    if (text == nil) {
+        promptText = [NSString stringWithFormat:@"请在iPhone的\"设置-隐私-相机\"中允许%@访问您的相机", appName];
+    } else {
+        promptText = text;
+    }
+    promptView.text = promptText;
     promptView.numberOfLines = 0;
     [self.view addSubview:promptView];
 
