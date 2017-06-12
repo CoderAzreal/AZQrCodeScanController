@@ -24,8 +24,8 @@
 ``` swift
 	let c = AZQrCodeScanController { (result) in
 	    print(result)        
-    }
-    present(c!, animated: true, completion: nil)
+    	}
+    	present(c!, animated: true, completion: nil)
 ```
 
 ### 效果图
