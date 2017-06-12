@@ -20,6 +20,8 @@
 @property (nonatomic, strong) AZQrCodeScanDevice *device;
 @property (nonatomic, strong) AZQrCodeScanView *scanView;
 @property (nonatomic, copy) void(^scanCompleteBlock)(NSString *result);
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIColor *closeButtonTintColor;
 
 @end
 
@@ -55,9 +57,41 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:_scanView];
-    
+    _closeButtonTintColor = UIColor.whiteColor;
     [self requestCaptureAuth];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if ([self isBeingPresented] && self.navigationController == nil) {
+        // 如果是present出来的
+        [self addReturnButton];
+    }
     
+}
+
+- (void)dealloc {
+    if (_device && _device.session.isRunning) {
+        [_device.session stopRunning];
+    }
+    dispatch_source_cancel(_scanView.timer);
+}
+
+- (void)addReturnButton {
+    self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AZQrCode" ofType:@"bundle"];
+    NSString *imagePath = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"close@2x" ofType:@"png"];
+    UIImage *image = [[UIImage imageWithContentsOfFile:imagePath] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [_closeButton setImage:image forState:UIControlStateNormal];
+    [_closeButton addTarget:self action:@selector(dismissController) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    _closeButton.frame = CGRectMake(15, 20, 50, 44);
+    _closeButton.imageView.tintColor = _closeButtonTintColor;
+    [self.view addSubview:_closeButton];
+}
+
+- (void)dismissController {
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 - (void)requestCaptureAuth {
@@ -105,7 +139,7 @@
 - (void)showPrompt:(NSString *)text {
     
     _scanView.hidden = true;
-    
+    _closeButtonTintColor = UIColor.blackColor;
     UILabel *promptView = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, AZ_SCREENWIDTH-40, 300)];
     promptView.textAlignment = NSTextAlignmentCenter;
     
@@ -123,14 +157,7 @@
     promptView.text = promptText;
     promptView.numberOfLines = 0;
     [self.view addSubview:promptView];
-
-}
-
-- (void)dealloc {
-    if (_device && _device.session.isRunning) {
-        [_device.session stopRunning];
-    }
-    dispatch_source_cancel(_scanView.timer);
+    
 }
 
 // MARK: - Set
@@ -192,6 +219,11 @@
 - (void)setIntroduceFrame:(CGRect)introduceFrame {
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
+}
+
+- (void)setShowCloseButton:(BOOL)showCloseButton {
+    _showCloseButton = showCloseButton;
+    _closeButton.hidden = true;
 }
 
 @end

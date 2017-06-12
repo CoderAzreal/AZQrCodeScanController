@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AZQrCodeScanController.h"
+#import "AZQrCodeScanController-Swift.h"
 
 @interface ViewController ()
 
@@ -25,10 +25,15 @@
     
     [super viewDidAppear:animated];
     
-    AZQrCodeScanController *c = [[AZQrCodeScanController alloc] initWithScanComplete:^(NSString *result) {
-        NSLog(@"result");
+    AZSwiftQrCodeScanController *c = [[AZSwiftQrCodeScanController alloc] initWithScanComplete:^(NSString *result) {
+        NSLog(@"%@", result);
+        [self dismissViewControllerAnimated:true completion:nil];
     }];
+    
+//    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:c];
     c.appName = @"这个app";
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [c.view addSubview:button];
     [self presentViewController:c animated:true completion:nil];
 }
 

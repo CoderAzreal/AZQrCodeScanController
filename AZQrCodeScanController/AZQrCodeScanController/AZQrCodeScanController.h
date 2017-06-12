@@ -71,6 +71,11 @@
 @property (nonatomic, copy) NSString *appName;
 
 /**
+ 是否显示关闭按钮(只有当controller为present显示并且没有导航栏时有效)
+ */
+@property (nonatomic, assign) BOOL showCloseButton;
+
+/**
  初始化方法(默认扫码区宽高为屏幕宽度-100, 居中显示)
  
  @param complete 扫码成功后回调

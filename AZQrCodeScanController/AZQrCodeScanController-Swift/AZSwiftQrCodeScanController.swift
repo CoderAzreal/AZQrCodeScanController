@@ -1,6 +1,6 @@
 //
-//  AZSwiftQRCodeCapture.swift
-//  AZSwiftQRCodeCapture
+//  AZSwiftQrCodeCapture.swift
+//  AZSwiftQrCodeCapture
 //
 //  Created by tianfengyu on 2017/5/21.
 //  Copyright © 2017年 tianfengyu. All rights reserved.
@@ -13,7 +13,7 @@ private let AZ_screenWidth = UIScreen.main.bounds.width
 private let AZ_screenHeight = UIScreen.main.bounds.height
 private let scanImageLeftPadding: CGFloat = 50.0
 
-public class AZSwiftQRCodeScanController: UIViewController {
+public class AZSwiftQrCodeScanController: UIViewController {
     
     /// 扫码线图片
     public var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
@@ -63,6 +63,11 @@ public class AZSwiftQRCodeScanController: UIViewController {
     /// 无拍照权限时提示的appname
     public var appName: String?
     
+    public var isCloseButtonShow = true
+    
+    /// 关闭按钮
+    private var closeButton: UIButton!
+    private var closeButtonTintColor = UIColor.white
     
     /// 扫码框位置
     private var scanFrame: CGRect!
@@ -70,8 +75,8 @@ public class AZSwiftQRCodeScanController: UIViewController {
     /// 扫码完成回调
     private var complete: ((String)->())?
     
-    private var device: AZSwiftQRCodeScanDevice?
-    private var scanView: AZSwiftQRCodeScanView!
+    private var device: AZSwiftQrCodeScanDevice?
+    private var scanView: AZSwiftQrCodeScanView!
     
     /// 初始化方法 默认扫码区域为屏幕宽度-100 居中显示
     ///
@@ -83,8 +88,9 @@ public class AZSwiftQRCodeScanController: UIViewController {
                                 y: (AZ_screenHeight-width)/2,
                                 width: width,
                                 height: width)
-        scanView = AZSwiftQRCodeScanView(scanFrame: self.scanFrame)
+        scanView = AZSwiftQrCodeScanView(scanFrame: self.scanFrame)
         self.complete = scanComplete
+        
     }
     
     /// 初始化方法
@@ -95,7 +101,7 @@ public class AZSwiftQRCodeScanController: UIViewController {
     public convenience init(scanFrame: CGRect, complete: ((String)->())?) {
         self.init(nibName: nil, bundle: nil)
         self.scanFrame = scanFrame
-        scanView = AZSwiftQRCodeScanView(scanFrame: self.scanFrame)
+        scanView = AZSwiftQrCodeScanView(scanFrame: self.scanFrame)
         self.complete = complete
     }
     
@@ -106,11 +112,36 @@ public class AZSwiftQRCodeScanController: UIViewController {
         requestCaptureAuth()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isBeingPresented && navigationController == nil {
+            addCloseButton()
+        }
+    }
+    
+    private func addCloseButton() {
+        closeButton = UIButton(type: .custom)
+        let bundlePath = Bundle(for: self.classForCoder).path(forResource: "AZQrCode", ofType: "bundle")!
+        let imagePath = Bundle(path: bundlePath)!.path(forResource: "close@2x", ofType: "png")!
+        let image = UIImage(contentsOfFile: imagePath)?.withRenderingMode(.alwaysTemplate)
+        closeButton.setImage(image, for: .normal)
+        closeButton.addTarget(self, action: #selector(dismissController), for: .touchUpInside)
+        closeButton.imageView?.contentMode = .scaleAspectFit
+        closeButton.frame = CGRect(x: 15, y: 20, width: 50, height: 44)
+        closeButton.imageView?.tintColor = closeButtonTintColor
+        view.addSubview(closeButton)
+        
+    }
+    
+    func dismissController() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     private func requestCaptureAuth() {
         
         func deviceWork() {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                device = AZSwiftQRCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
+                device = AZSwiftQrCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
                 device?.complete = complete
             } else {
                 showPrompt(text: "当前设备没有拍照功能")
@@ -146,7 +177,7 @@ public class AZSwiftQRCodeScanController: UIViewController {
     
     private func showPrompt(text: String? = nil) {
         scanView.isHidden = true
-        
+        closeButtonTintColor = .black
         let promptLabel = UILabel(frame: CGRect(x: 20, y: 0, width: AZ_screenWidth-40, height: 300))
         promptLabel.textAlignment = .center
         if appName == nil {
@@ -180,7 +211,7 @@ public class AZSwiftQRCodeScanController: UIViewController {
     }
 }
 
-private class AZSwiftQRCodeScanView: UIView {
+private class AZSwiftQrCodeScanView: UIView {
     var topCoverView = UIView()
     var leftCoverView = UIView()
     var rightCoverView = UIView()
@@ -237,7 +268,7 @@ private class AZSwiftQRCodeScanView: UIView {
     /// 扫码框/扫码线/介绍文字
     private func configScanUI() {
         
-        let bundlePath = Bundle(for: classForCoder).path(forResource: "AZSwiftQRCode", ofType: "bundle")!
+        let bundlePath = Bundle(for: classForCoder).path(forResource: "AZQrCode", ofType: "bundle")!
         let captureBundle = Bundle(path: bundlePath)!
         
         scanImageView = UIImageView(frame: scanFrame)
@@ -281,7 +312,7 @@ private class AZSwiftQRCodeScanView: UIView {
     required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 
-private class AZSwiftQRCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate {
+private class AZSwiftQrCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate {
     
     private var device: AVCaptureDevice!
     private var input: AVCaptureDeviceInput!

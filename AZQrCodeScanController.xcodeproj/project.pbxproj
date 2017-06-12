@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5042A8BD1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */; };
+		5059BBE81EEED3EE00B9E008 /* AZQrCode.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */; };
 		50B21DC31EEA749600F07A12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC21EEA749600F07A12 /* main.m */; };
 		50B21DC61EEA749600F07A12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC51EEA749600F07A12 /* AppDelegate.m */; };
 		50B21DC91EEA749600F07A12 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC81EEA749600F07A12 /* ViewController.m */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanController.swift; sourceTree = "<group>"; };
+		5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
 		50B21DBE1EEA749600F07A12 /* AZQrCodeScanController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZQrCodeScanController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B21DC21EEA749600F07A12 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50B21DC41EEA749600F07A12 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */,
+				5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */,
 			);
 			path = "AZQrCodeScanController-Swift";
 			sourceTree = "<group>";
@@ -176,6 +179,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50B21DEC1EEA74D800F07A12 /* AZQrCode.bundle in Resources */,
+				5059BBE81EEED3EE00B9E008 /* AZQrCode.bundle in Resources */,
 				50B21DD11EEA749600F07A12 /* LaunchScreen.storyboard in Resources */,
 				50B21DCE1EEA749600F07A12 /* Assets.xcassets in Resources */,
 				50B21DCC1EEA749600F07A12 /* Main.storyboard in Resources */,
