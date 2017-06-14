@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AZQrCodeScanController-Swift.h"
+#import "AZQrCodeScanController.h"
 
 @interface ViewController ()
 
@@ -25,22 +25,18 @@
     
     [super viewDidAppear:animated];
     
-    AZSwiftQrCodeScanController *c = [[AZSwiftQrCodeScanController alloc] initWithScanComplete:^(NSString *result) {
+    AZQrCodeScanController *c = [[AZQrCodeScanController alloc] initWithScanComplete:^(NSString *result) {
         NSLog(@"%@", result);
         [self dismissViewControllerAnimated:true completion:nil];
     }];
     
 //    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:c];
-    c.appName = @"这个app";
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [c.view addSubview:button];
+//    c.navigationTitleText = @"扫描";
+//    c.navigationBarAlpha = 0.5;
+//    c.navigationBarTintColor = UIColor.redColor;
+//    c.navigationTintColor = UIColor.greenColor;
+
     [self presentViewController:c animated:true completion:nil];
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

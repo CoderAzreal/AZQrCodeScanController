@@ -7,23 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5042048F1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042048E1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift */; };
+		504204911EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504204901EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift */; };
+		5042049F1EF0DF3D006FEC3B /* AZQrCode.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5042049E1EF0DF3D006FEC3B /* AZQrCode.bundle */; };
+		504204A11EF0DF43006FEC3B /* AZQrCode.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 504204A01EF0DF43006FEC3B /* AZQrCode.bundle */; };
 		5042A8BD1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */; };
-		5059BBE81EEED3EE00B9E008 /* AZQrCode.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */; };
 		50B21DC31EEA749600F07A12 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC21EEA749600F07A12 /* main.m */; };
 		50B21DC61EEA749600F07A12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC51EEA749600F07A12 /* AppDelegate.m */; };
 		50B21DC91EEA749600F07A12 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DC81EEA749600F07A12 /* ViewController.m */; };
 		50B21DCC1EEA749600F07A12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50B21DCA1EEA749600F07A12 /* Main.storyboard */; };
 		50B21DCE1EEA749600F07A12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50B21DCD1EEA749600F07A12 /* Assets.xcassets */; };
 		50B21DD11EEA749600F07A12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50B21DCF1EEA749600F07A12 /* LaunchScreen.storyboard */; };
-		50B21DEC1EEA74D800F07A12 /* AZQrCode.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 50B21DE51EEA74D800F07A12 /* AZQrCode.bundle */; };
 		50B21DED1EEA74D800F07A12 /* AZQrCodeScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DE71EEA74D800F07A12 /* AZQrCodeScanController.m */; };
 		50B21DEE1EEA74D800F07A12 /* AZQrCodeScanDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DE91EEA74D800F07A12 /* AZQrCodeScanDevice.m */; };
 		50B21DEF1EEA74D800F07A12 /* AZQrCodeScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DEB1EEA74D800F07A12 /* AZQrCodeScanView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5042048E1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanView.swift; sourceTree = "<group>"; };
+		504204901EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanDevice.swift; sourceTree = "<group>"; };
+		5042049E1EF0DF3D006FEC3B /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
+		504204A01EF0DF43006FEC3B /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
 		5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanController.swift; sourceTree = "<group>"; };
-		5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
 		50B21DBE1EEA749600F07A12 /* AZQrCodeScanController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZQrCodeScanController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B21DC21EEA749600F07A12 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50B21DC41EEA749600F07A12 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -34,7 +39,6 @@
 		50B21DCD1EEA749600F07A12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		50B21DD01EEA749600F07A12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		50B21DD21EEA749600F07A12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50B21DE51EEA74D800F07A12 /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
 		50B21DE61EEA74D800F07A12 /* AZQrCodeScanController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZQrCodeScanController.h; sourceTree = "<group>"; };
 		50B21DE71EEA74D800F07A12 /* AZQrCodeScanController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZQrCodeScanController.m; sourceTree = "<group>"; };
 		50B21DE81EEA74D800F07A12 /* AZQrCodeScanDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZQrCodeScanDevice.h; sourceTree = "<group>"; };
@@ -58,7 +62,9 @@
 			isa = PBXGroup;
 			children = (
 				5042A8BC1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift */,
-				5059BBE71EEED3EE00B9E008 /* AZQrCode.bundle */,
+				5042048E1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift */,
+				504204901EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift */,
+				5042049E1EF0DF3D006FEC3B /* AZQrCode.bundle */,
 			);
 			path = "AZQrCodeScanController-Swift";
 			sourceTree = "<group>";
@@ -108,7 +114,7 @@
 		50B21DE41EEA74D800F07A12 /* AZQrCodeScanController */ = {
 			isa = PBXGroup;
 			children = (
-				50B21DE51EEA74D800F07A12 /* AZQrCode.bundle */,
+				504204A01EF0DF43006FEC3B /* AZQrCode.bundle */,
 				50B21DE61EEA74D800F07A12 /* AZQrCodeScanController.h */,
 				50B21DE71EEA74D800F07A12 /* AZQrCodeScanController.m */,
 				50B21DE81EEA74D800F07A12 /* AZQrCodeScanDevice.h */,
@@ -178,8 +184,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50B21DEC1EEA74D800F07A12 /* AZQrCode.bundle in Resources */,
-				5059BBE81EEED3EE00B9E008 /* AZQrCode.bundle in Resources */,
+				5042049F1EF0DF3D006FEC3B /* AZQrCode.bundle in Resources */,
+				504204A11EF0DF43006FEC3B /* AZQrCode.bundle in Resources */,
 				50B21DD11EEA749600F07A12 /* LaunchScreen.storyboard in Resources */,
 				50B21DCE1EEA749600F07A12 /* Assets.xcassets in Resources */,
 				50B21DCC1EEA749600F07A12 /* Main.storyboard in Resources */,
@@ -197,8 +203,10 @@
 				50B21DC91EEA749600F07A12 /* ViewController.m in Sources */,
 				50B21DEF1EEA74D800F07A12 /* AZQrCodeScanView.m in Sources */,
 				50B21DED1EEA74D800F07A12 /* AZQrCodeScanController.m in Sources */,
+				5042048F1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift in Sources */,
 				50B21DC61EEA749600F07A12 /* AppDelegate.m in Sources */,
 				50B21DC31EEA749600F07A12 /* main.m in Sources */,
+				504204911EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift in Sources */,
 				5042A8BD1EECE35B004E06E7 /* AZSwiftQrCodeScanController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,7 +331,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 82G9ZZBL2X;
 				INFOPLIST_FILE = AZQrCodeScanController/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Azreal.AZQrCodeScanController.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -337,7 +345,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 82G9ZZBL2X;
 				INFOPLIST_FILE = AZQrCodeScanController/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Azreal.AZQrCodeScanController.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";

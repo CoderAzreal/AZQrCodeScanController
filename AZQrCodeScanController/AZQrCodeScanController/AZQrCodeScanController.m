@@ -20,8 +20,7 @@
 @property (nonatomic, strong) AZQrCodeScanDevice *device;
 @property (nonatomic, strong) AZQrCodeScanView *scanView;
 @property (nonatomic, copy) void(^scanCompleteBlock)(NSString *result);
-@property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UIColor *closeButtonTintColor;
+@property (nonatomic, strong) UINavigationBar *navigationBar;
 
 @end
 
@@ -31,6 +30,9 @@
 - (instancetype)initWithScanComplete:(void (^)(NSString *))complete {
     
     if (self = [super init]) {
+        
+        [self configInitValue];
+        
         CGFloat width = AZ_SCREENWIDTH - SCANPADDING*2;
         _scanFrame = CGRectMake((AZ_SCREENWIDTH-width)/2,
                                 (AZ_SCREENHEIGHT-width)/2,
@@ -45,6 +47,7 @@
 - (instancetype)initWithScanFrame:(CGRect)frame complete:(void (^)(NSString *))complete {
     
     if (self = [super init]) {
+        [self configInitValue];
         _scanFrame = frame;
         _scanView = [[AZQrCodeScanView alloc] initWithScanFrame:_scanFrame];
         _scanCompleteBlock = complete;
@@ -52,22 +55,24 @@
     return self;
 }
 
+- (void)configInitValue {
+    _navigationTintColor = [UIColor whiteColor];
+    _navigationBarAlpha = 0;
+    _navigationBarTintColor = [UIColor whiteColor];
+    _navigationTitleText = @"二维码扫描";
+}
+
 // MARK: - 生命周期
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     [self.view addSubview:_scanView];
-    _closeButtonTintColor = UIColor.whiteColor;
     [self requestCaptureAuth];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if ([self isBeingPresented] && self.navigationController == nil) {
-        // 如果是present出来的
-        [self addReturnButton];
-    }
-    
+    [self configNavigation];
 }
 
 - (void)dealloc {
@@ -77,17 +82,48 @@
     dispatch_source_cancel(_scanView.timer);
 }
 
-- (void)addReturnButton {
-    self.closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AZQrCode" ofType:@"bundle"];
-    NSString *imagePath = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"close@2x" ofType:@"png"];
-    UIImage *image = [[UIImage imageWithContentsOfFile:imagePath] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [_closeButton setImage:image forState:UIControlStateNormal];
-    [_closeButton addTarget:self action:@selector(dismissController) forControlEvents:UIControlEventTouchUpInside];
-    _closeButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    _closeButton.frame = CGRectMake(15, 20, 50, 44);
-    _closeButton.imageView.tintColor = _closeButtonTintColor;
-    [self.view addSubview:_closeButton];
+- (void)configNavigation {
+    if (self.navigationController == nil) {
+        _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, AZ_SCREENWIDTH, 64)];
+        _navigationBar.shadowImage = [[UIImage alloc] init];
+        [_navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
+        _navigationBar.tintColor = _navigationTintColor;
+        UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:_navigationTitleText];
+        [_navigationBar pushNavigationItem:navigationItem animated:true];
+        NSString *bundlePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"AZQrCode" ofType:@"bundle"];
+        NSString *imagePath = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"close@2x" ofType:@"png"];
+        UIImage *image = [[UIImage imageWithContentsOfFile:imagePath] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIBarButtonItem *closeItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(dismissController)];
+        navigationItem.leftBarButtonItem = closeItem;
+        _navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
+//        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+//        navigationItem.rightBarButtonItem = albumItem;
+        [self.view addSubview:_navigationBar];
+    } else {
+        self.navigationItem.title = _navigationTitleText;
+        self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
+//        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+//        self.navigationItem.rightBarButtonItem = albumItem;
+        self.navigationController.navigationBar.tintColor = _navigationTintColor;
+        self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
+        [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
+    }
+}
+
+- (UIImage *)imageWithColor:(UIColor *)color alpha:(CGFloat)alpha {
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, color.CGColor);
+    CGContextSetAlpha(context, alpha);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+- (void)albumClick {
+    
 }
 
 - (void)dismissController {
@@ -139,7 +175,7 @@
 - (void)showPrompt:(NSString *)text {
     
     _scanView.hidden = true;
-    _closeButtonTintColor = UIColor.blackColor;
+    
     UILabel *promptView = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, AZ_SCREENWIDTH-40, 300)];
     promptView.textAlignment = NSTextAlignmentCenter;
     
@@ -219,11 +255,6 @@
 - (void)setIntroduceFrame:(CGRect)introduceFrame {
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
-}
-
-- (void)setShowCloseButton:(BOOL)showCloseButton {
-    _showCloseButton = showCloseButton;
-    _closeButton.hidden = true;
 }
 
 @end

@@ -9,11 +9,13 @@
 import UIKit
 import AVFoundation
 
-private let AZ_screenWidth = UIScreen.main.bounds.width
-private let AZ_screenHeight = UIScreen.main.bounds.height
-private let scanImageLeftPadding: CGFloat = 50.0
+let AZ_screenWidth: CGFloat = UIScreen.main.bounds.width
+let AZ_screenHeight: CGFloat = UIScreen.main.bounds.height
+let scanImageLeftPadding: CGFloat = 50.0
 
 public class AZSwiftQrCodeScanController: UIViewController {
+    
+    // MARK: - 属性定义
     
     /// 扫码线图片
     public var scanLineImage: UIImage? { didSet { scanView.scanLine.image = scanLineImage } }
@@ -63,20 +65,31 @@ public class AZSwiftQrCodeScanController: UIViewController {
     /// 无拍照权限时提示的appname
     public var appName: String?
     
-    public var isCloseButtonShow = true
+    /// 导航栏文字、按钮颜色 默认白色
+    public var navigationTintColor: UIColor = UIColor.white
     
-    /// 关闭按钮
-    private var closeButton: UIButton!
-    private var closeButtonTintColor = UIColor.white
+    /// 导航栏透明度 默认为0 透明
+    public var navigationBarAlpha: CGFloat = 0
+    
+    /// 导航栏背景颜色 默认白色
+    public var navigationBarTintColor: UIColor = UIColor.white
+    
+    /// 导航栏标题 默认为“二维码扫描”
+    public var navigationTitleText = "二维码扫描"
+    
+    /// 导航栏
+    fileprivate var navigationBar: UINavigationBar?
     
     /// 扫码框位置
-    private var scanFrame: CGRect!
+    fileprivate var scanFrame: CGRect!
     
     /// 扫码完成回调
-    private var complete: ((String)->())?
+    fileprivate var complete: ((String)->())?
     
-    private var device: AZSwiftQrCodeScanDevice?
-    private var scanView: AZSwiftQrCodeScanView!
+    fileprivate var device: AZSwiftQrCodeScanDevice?
+    fileprivate var scanView: AZSwiftQrCodeScanView!
+    
+    // MARK: - 初始化方法定义
     
     /// 初始化方法 默认扫码区域为屏幕宽度-100 居中显示
     ///
@@ -105,6 +118,14 @@ public class AZSwiftQrCodeScanController: UIViewController {
         self.complete = complete
     }
     
+    private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - 生命周期
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -114,31 +135,67 @@ public class AZSwiftQrCodeScanController: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if isBeingPresented && navigationController == nil {
-            addCloseButton()
+        
+        configNavigation()
+    }
+    
+    deinit {
+        if device != nil && device!.session.isRunning {
+            device!.session.stopRunning()
+        }
+        if !scanView.timer.isCancelled {
+            scanView.timer.cancel()
+        }
+    }
+}
+
+// MARK: - 导航栏
+extension AZSwiftQrCodeScanController {
+    
+    fileprivate func configNavigation() {
+        // 创建导航栏
+        if navigationController == nil {
+            // 创建导航栏view
+            navigationBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: AZ_screenWidth, height: 64))
+            navigationBar?.shadowImage = UIImage()
+            navigationBar?.setBackgroundImage(UIImage.colorImage(color: navigationBarTintColor, alpha: navigationBarAlpha), for: .default)
+            navigationBar?.tintColor = navigationTintColor
+            let navigationItem = UINavigationItem(title: navigationTitleText)
+            navigationBar?.pushItem(navigationItem, animated: true)
+            let bundlePath = Bundle(for: self.classForCoder).path(forResource: "AZQrCode", ofType: "bundle")!
+            let imagePath = Bundle(path: bundlePath)!.path(forResource: "close@2x", ofType: "png")!
+            let image = UIImage(contentsOfFile: imagePath)?.withRenderingMode(.alwaysTemplate)
+            let closeItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(dismissController))
+            navigationItem.leftBarButtonItem = closeItem
+            navigationBar?.titleTextAttributes = [NSForegroundColorAttributeName: navigationTintColor]
+//            let albumItem = UIBarButtonItem(title: "相册", style: .plain, target: self, action: #selector(albumClick))
+//            navigationItem.rightBarButtonItem = albumItem
+            view.addSubview(navigationBar!)
+        } else {
+            navigationItem.title = navigationTitleText
+            navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: navigationTintColor]
+//            let albumItem = UIBarButtonItem(title: "相册", style: .plain, target: self, action: #selector(albumClick))
+//            navigationItem.rightBarButtonItem = albumItem
+            navigationController?.navigationBar.tintColor = navigationTintColor
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.setBackgroundImage(UIImage.colorImage(color: navigationBarTintColor, alpha: navigationBarAlpha), for: .default)
         }
     }
     
-    private func addCloseButton() {
-        closeButton = UIButton(type: .custom)
-        let bundlePath = Bundle(for: self.classForCoder).path(forResource: "AZQrCode", ofType: "bundle")!
-        let imagePath = Bundle(path: bundlePath)!.path(forResource: "close@2x", ofType: "png")!
-        let image = UIImage(contentsOfFile: imagePath)?.withRenderingMode(.alwaysTemplate)
-        closeButton.setImage(image, for: .normal)
-        closeButton.addTarget(self, action: #selector(dismissController), for: .touchUpInside)
-        closeButton.imageView?.contentMode = .scaleAspectFit
-        closeButton.frame = CGRect(x: 15, y: 20, width: 50, height: 44)
-        closeButton.imageView?.tintColor = closeButtonTintColor
-        view.addSubview(closeButton)
+    func albumClick() {
         
     }
     
     func dismissController() {
         dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: - 请求用户权限
+extension AZSwiftQrCodeScanController {
     
-    private func requestCaptureAuth() {
-        
+    fileprivate func requestCaptureAuth() {
+        //
         func deviceWork() {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 device = AZSwiftQrCodeScanDevice(scanFrame: scanFrame, layer: view.layer)
@@ -177,7 +234,6 @@ public class AZSwiftQrCodeScanController: UIViewController {
     
     private func showPrompt(text: String? = nil) {
         scanView.isHidden = true
-        closeButtonTintColor = .black
         let promptLabel = UILabel(frame: CGRect(x: 20, y: 0, width: AZ_screenWidth-40, height: 300))
         promptLabel.textAlignment = .center
         if appName == nil {
@@ -194,174 +250,20 @@ public class AZSwiftQrCodeScanController: UIViewController {
         view.addSubview(promptLabel)
         
     }
+}
+// MARK: - 生成纯色图片
+private extension UIImage {
     
-    private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    deinit {
-        if device != nil && device!.session.isRunning {
-            device!.session.stopRunning()
-        }
-        if !scanView.timer.isCancelled {
-            scanView.timer.cancel()
-        }
+    static func colorImage(color: UIColor, alpha: CGFloat) -> UIImage? {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setFillColor(color.cgColor)
+        context?.setAlpha(alpha)
+        context?.fill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
 
-private class AZSwiftQrCodeScanView: UIView {
-    var topCoverView = UIView()
-    var leftCoverView = UIView()
-    var rightCoverView = UIView()
-    var bottomCoverView = UIView()
-    
-    fileprivate var scanFrame: CGRect!
-    
-    var scanImageView: UIImageView! // 扫码框
-    var scanLine: UIImageView! // 扫码线
-    var introduceLabel: UILabel! // 提示文字label
-    
-    
-    /// 扫码线移动方向
-    private enum LineMoveDirect {
-        case up
-        case down
-    }
-    var timer: DispatchSourceTimer!
-    private var lineDirection = LineMoveDirect.down
-    
-    convenience init(scanFrame: CGRect) {
-        self.init(frame: CGRect(x: 0, y: 0, width: AZ_screenWidth, height: AZ_screenHeight))
-        configCoverView()
-        
-        self.scanFrame = scanFrame
-        resetCoverViewFrame()
-        configScanUI()
-        configTimer()
-    }
-    
-    /// 扫码线移动
-    private func configTimer() {
-        timer = DispatchSource.makeTimerSource(flags: .strict, queue: .main)
-        timer.scheduleRepeating(deadline: .now(), interval: .milliseconds(10))
-        weak var wkSelf = self
-        timer.setEventHandler {
-            var lineFrame = wkSelf!.scanLine.frame
-            switch wkSelf!.lineDirection {
-            case .up:
-                lineFrame.origin.y -= 1
-            case .down:
-                lineFrame.origin.y += 1
-            }
-            wkSelf?.scanLine.frame = lineFrame
-            if lineFrame.origin.y >= wkSelf!.scanFrame.origin.y + wkSelf!.scanFrame.width - lineFrame.size.height {
-                wkSelf!.lineDirection = .up
-            } else if lineFrame.origin.y <= wkSelf!.scanFrame.origin.y {
-                wkSelf!.lineDirection = .down
-            }
-        }
-        timer.resume()
-    }
-    
-    /// 扫码框/扫码线/介绍文字
-    private func configScanUI() {
-        
-        let bundlePath = Bundle(for: classForCoder).path(forResource: "AZQrCode", ofType: "bundle")!
-        let captureBundle = Bundle(path: bundlePath)!
-        
-        scanImageView = UIImageView(frame: scanFrame)
-        let bgPath = captureBundle.path(forResource: "scan_bg_pic@2x", ofType: "png")!
-        scanImageView.image = UIImage(contentsOfFile: bgPath)
-        addSubview(scanImageView)
-        
-        scanLine = UIImageView(frame: CGRect(x: scanFrame.origin.x, y: scanFrame.origin.y
-            , width: scanFrame.width, height: 2))
-        let linePath = captureBundle.path(forResource: "scan_line@2x", ofType: "png")!
-        scanLine.image = UIImage(contentsOfFile: linePath)
-        addSubview(scanLine)
-        
-        introduceLabel = UILabel(frame: CGRect(x: scanFrame.origin.x, y: scanFrame.origin.y+scanFrame.size.height+20, width: scanFrame.width, height: 40))
-        introduceLabel.numberOfLines = 0
-        introduceLabel.textAlignment = .center
-        introduceLabel.text = "将二维码/条码放入框内，即可自动扫描。"
-        introduceLabel.textColor = .white
-        introduceLabel.font = UIFont.systemFont(ofSize: 14)
-        addSubview(introduceLabel)
-    }
-    
-    /// 配置coverView
-    private func configCoverView() {
-        for item in [topCoverView, leftCoverView, bottomCoverView, rightCoverView] {
-            item.backgroundColor = UIColor(white: 0, alpha: 0.4)
-            addSubview(item)
-        }
-    }
-    
-    /// 设置遮罩层位置
-    private func resetCoverViewFrame() {
-        leftCoverView.frame = CGRect(x: 0, y: 0, width: scanFrame.origin.x, height: AZ_screenHeight)
-        topCoverView.frame = CGRect(x: scanFrame.origin.x, y: 0, width: AZ_screenWidth, height: scanFrame.origin.y)
-        rightCoverView.frame = CGRect(x: scanFrame.origin.x, y: scanFrame.height+scanFrame.origin.y, width: AZ_screenWidth, height: AZ_screenHeight)
-        bottomCoverView.frame = CGRect(x: scanFrame.width+scanFrame.origin.x, y: scanFrame.origin.y, width: AZ_screenWidth, height: scanFrame.height)
-    }
-    
-    
-    override init(frame: CGRect) { super.init(frame: frame) }
-    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-}
-
-private class AZSwiftQrCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate {
-    
-    private var device: AVCaptureDevice!
-    private var input: AVCaptureDeviceInput!
-    private var output: AVCaptureMetadataOutput!
-    var session: AVCaptureSession!
-    private var preview: AVCaptureVideoPreviewLayer!
-    var complete: ((String)->())?
-    
-    init(scanFrame: CGRect, layer: CALayer) {
-        super.init()
-        device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
-        do {
-            input = try AVCaptureDeviceInput(device: device)
-        } catch {
-            print(error)
-        }
-        output = AVCaptureMetadataOutput()
-        output.setMetadataObjectsDelegate(self, queue: .main)
-        
-        session = AVCaptureSession()
-        session.sessionPreset = AVCaptureSessionPresetHigh
-        if session.canAddInput(input) {
-            session.addInput(input)
-        }
-        if session.canAddOutput(output) {
-            session.addOutput(output)
-        }
-        output.metadataObjectTypes = [AVMetadataObjectTypeQRCode, AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code]
-        output.rectOfInterest = CGRect(x: scanFrame.origin.y/AZ_screenHeight,
-                                       y: (AZ_screenWidth-scanFrame.size.width-scanFrame.origin.x)/AZ_screenWidth,
-                                       width: scanFrame.size.height/AZ_screenHeight,
-                                       height: scanFrame.size.width/AZ_screenWidth)
-        preview = AVCaptureVideoPreviewLayer(session: session)
-        preview.videoGravity = AVLayerVideoGravityResizeAspectFill
-        preview.frame = CGRect(x: 0, y: 0, width: AZ_screenWidth, height: AZ_screenHeight)
-        layer.insertSublayer(preview, at: 0)
-        session.startRunning()
-    }
-    
-    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
-        if metadataObjects.count > 0 {
-            session.stopRunning()
-            let metadataObject = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-            let stringValue = metadataObject.stringValue
-            guard stringValue != nil else {
-                complete?("")
-                return
-            }
-            complete?(stringValue!)
-        }
-    }
-}

@@ -71,9 +71,24 @@
 @property (nonatomic, copy) NSString *appName;
 
 /**
- 是否显示关闭按钮(只有当controller为present显示并且没有导航栏时有效)
+ 导航栏文字、按钮颜色 默认白色
  */
-@property (nonatomic, assign) BOOL showCloseButton;
+@property (nonatomic, strong) UIColor *navigationTintColor;
+
+/**
+ 导航栏透明度 默认为0 透明
+ */
+@property (nonatomic, assign) CGFloat navigationBarAlpha;
+
+/**
+ 导航栏背景颜色 默认白色
+ */
+@property (nonatomic, strong) UIColor *navigationBarTintColor;
+
+/**
+ 导航栏标题 默认为“二维码扫描”
+ */
+@property (nonatomic, copy) NSString *navigationTitleText;
 
 /**
  初始化方法(默认扫码区宽高为屏幕宽度-100, 居中显示)
