@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.title = @"啊哈";
+    self.navigationItem.title = @"首页";
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
     [btn setTitle:@"开始" forState:UIControlStateNormal];
     btn.frame = CGRectMake(100, 100, 100, 100);
