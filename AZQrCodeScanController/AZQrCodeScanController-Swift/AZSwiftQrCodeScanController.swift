@@ -88,13 +88,18 @@ public class AZSwiftQrCodeScanController: UIViewController {
     
     fileprivate var device: AZSwiftQrCodeScanDevice?
     fileprivate var scanView: AZSwiftQrCodeScanView!
+    /// 记录进入该控制器前的导航栏状态
+    fileprivate var originalTitleTextAttributes: [String: Any]?
+    fileprivate var originalTintColor: UIColor?
+    fileprivate var originalShadowImage: UIImage?
+    fileprivate var originalBackgroundImage: UIImage?
     
     // MARK: - 初始化方法定义
     
     /// 初始化方法 默认扫码区域为屏幕宽度-100 居中显示
     ///
     /// - Parameter scanComplete: 扫码完成后回调
-    public convenience init(scanComplete: ((String)->())?) {
+    public convenience init(scanComplete: ((String, AZSwiftQrCodeScanController?)->())?) {
         self.init(nibName: nil, bundle: nil)
         let width = AZ_screenWidth-scanImageLeftPadding*2
         self.scanFrame = CGRect(x: (AZ_screenWidth-width)/2,
@@ -102,7 +107,13 @@ public class AZSwiftQrCodeScanController: UIViewController {
                                 width: width,
                                 height: width)
         scanView = AZSwiftQrCodeScanView(scanFrame: self.scanFrame)
-        self.complete = scanComplete
+        weak var wkSelf = self
+        self.complete = { result in
+            wkSelf?.scanView.timerState = .stop
+            if scanComplete != nil {
+                scanComplete!(result, wkSelf)
+            }
+        }
         
     }
     
@@ -111,11 +122,17 @@ public class AZSwiftQrCodeScanController: UIViewController {
     /// - Parameters:
     ///   - scanFrame: 自定义扫码区域
     ///   - complete: 扫码完成回调
-    public convenience init(scanFrame: CGRect, complete: ((String)->())?) {
+    public convenience init(scanFrame: CGRect, complete: ((String, AZSwiftQrCodeScanController?)->())?) {
         self.init(nibName: nil, bundle: nil)
         self.scanFrame = scanFrame
         scanView = AZSwiftQrCodeScanView(scanFrame: self.scanFrame)
-        self.complete = complete
+        weak var wkSelf = self
+        self.complete = { result in
+            wkSelf?.scanView.timerState = .stop
+            if complete != nil {
+                complete!(result, wkSelf)
+            }
+        }
     }
     
     private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -123,6 +140,21 @@ public class AZSwiftQrCodeScanController: UIViewController {
     }
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func start() {
+        
+        scanView.timerState = .move
+        if device != nil && !device!.session.isRunning {
+            device!.session.startRunning()
+        }
+    }
+    
+    public func stop() {
+        scanView.timerState = .stop
+        if device != nil && device!.session.isRunning {
+            device!.session.stopRunning()
+        }
     }
     
     // MARK: - 生命周期
@@ -135,8 +167,19 @@ public class AZSwiftQrCodeScanController: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         configNavigation()
+    }
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        start()
+    }
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.shadowImage = originalShadowImage
+        navigationController?.navigationBar.tintColor = originalTintColor
+        navigationController?.navigationBar.titleTextAttributes = originalTitleTextAttributes
+        navigationController?.navigationBar.setBackgroundImage(originalBackgroundImage, for: .default)
+        stop()
     }
     
     deinit {
@@ -172,6 +215,12 @@ extension AZSwiftQrCodeScanController {
 //            navigationItem.rightBarButtonItem = albumItem
             view.addSubview(navigationBar!)
         } else {
+            
+            originalBackgroundImage = navigationController?.navigationBar.backgroundImage(for: .default)
+            originalShadowImage = navigationController?.navigationBar.shadowImage
+            originalTintColor = navigationController?.navigationBar.tintColor
+            originalTitleTextAttributes = navigationController?.navigationBar.titleTextAttributes
+            
             navigationItem.title = navigationTitleText
             navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: navigationTintColor]
 //            let albumItem = UIBarButtonItem(title: "相册", style: .plain, target: self, action: #selector(albumClick))

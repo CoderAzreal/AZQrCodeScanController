@@ -21,13 +21,18 @@
 @property (nonatomic, strong) AZQrCodeScanView *scanView;
 @property (nonatomic, copy) void(^scanCompleteBlock)(NSString *result);
 @property (nonatomic, strong) UINavigationBar *navigationBar;
+/// 记录进入该控制器前的导航栏状态
+@property (nonatomic, strong) NSDictionary *originalTitleTextAttributes;
+@property (nonatomic, strong) UIColor *originalTintColor;
+@property (nonatomic, strong) UIImage *originalShadowImage;
+@property (nonatomic, strong) UIImage *originalBackgroundImage;
 
 @end
 
 @implementation AZQrCodeScanController
 
 // MARK: - 初始化方法
-- (instancetype)initWithScanComplete:(void (^)(NSString *))complete {
+- (instancetype)initWithScanComplete:(void (^)(NSString *, AZQrCodeScanController *))complete {
     
     if (self = [super init]) {
         
@@ -39,18 +44,26 @@
                                 width,
                                 width);
         _scanView = [[AZQrCodeScanView alloc] initWithScanFrame:_scanFrame];
-        _scanCompleteBlock = complete;
+        __weak AZQrCodeScanController *wkSelf = self;
+        _scanCompleteBlock = ^(NSString *result) {
+            wkSelf.scanView.timerState = AZTimerStateStop;
+            complete(result, wkSelf);
+        };
     }
     return self;
 }
 
-- (instancetype)initWithScanFrame:(CGRect)frame complete:(void (^)(NSString *))complete {
+- (instancetype)initWithScanFrame:(CGRect)frame complete:(void (^)(NSString *, AZQrCodeScanController *))complete {
     
     if (self = [super init]) {
         [self configInitValue];
         _scanFrame = frame;
         _scanView = [[AZQrCodeScanView alloc] initWithScanFrame:_scanFrame];
-        _scanCompleteBlock = complete;
+        __weak AZQrCodeScanController *wkSelf = self;
+        _scanCompleteBlock = ^(NSString *result) {
+            wkSelf.scanView.timerState = AZTimerStateStop;
+            complete(result, wkSelf);
+        };
     }
     return self;
 }
@@ -60,6 +73,26 @@
     _navigationBarAlpha = 0;
     _navigationBarTintColor = [UIColor whiteColor];
     _navigationTitleText = @"二维码扫描";
+}
+
+/**
+ 启动扫码线动画与session
+ */
+- (void)start {
+    _scanView.timerState = AZTimerStateMove;
+    if (![_device.session isRunning]) {
+        [_device.session startRunning];
+    }
+}
+
+/**
+ 暂停扫码线动画与session
+ */
+- (void)stop {
+    _scanView.timerState = AZTimerStateStop;
+    if ([_device.session isRunning]) {
+        [_device.session stopRunning];
+    }
 }
 
 // MARK: - 生命周期
@@ -74,6 +107,25 @@
     [super viewWillAppear:animated];
     [self configNavigation];
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self start];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self stop];
+    
+    self.navigationController.navigationBar.shadowImage = _originalShadowImage;
+    self.navigationController.navigationBar.titleTextAttributes = _originalTitleTextAttributes;
+    self.navigationController.navigationBar.tintColor = _originalTintColor;
+    [self.navigationController.navigationBar setBackgroundImage:_originalBackgroundImage forBarMetrics:UIBarMetricsDefault];
+}
+
+
 
 - (void)dealloc {
     if (_device && _device.session.isRunning) {
@@ -101,6 +153,12 @@
         [self.view addSubview:_navigationBar];
     } else {
         self.navigationItem.title = _navigationTitleText;
+        
+        self.originalTitleTextAttributes = self.navigationController.navigationBar.titleTextAttributes;
+        self.originalTintColor = self.navigationController.navigationBar.tintColor;
+        self.originalShadowImage = self.navigationController.navigationBar.shadowImage;
+        self.originalShadowImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
+        
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
 //        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
 //        self.navigationItem.rightBarButtonItem = albumItem;

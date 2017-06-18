@@ -95,7 +95,7 @@
  
  @param complete 扫码成功后回调
  */
-- (instancetype)initWithScanComplete:(void(^)(NSString *result))complete;
+- (instancetype)initWithScanComplete:(void(^)(NSString *result, AZQrCodeScanController *capture))complete;
 
 /**
  初始化方法
@@ -103,6 +103,9 @@
  @param frame 扫码区域位置
  @param complete 扫码成功后回调
  */
-- (instancetype)initWithScanFrame:(CGRect)frame complete:(void(^)(NSString *result))complete;
+- (instancetype)initWithScanFrame:(CGRect)frame complete:(void(^)(NSString *result, AZQrCodeScanController *capture))complete;
+
+- (void)start;
+- (void)stop;
 
 @end

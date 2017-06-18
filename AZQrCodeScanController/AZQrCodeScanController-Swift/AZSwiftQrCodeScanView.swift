@@ -20,13 +20,17 @@ class AZSwiftQrCodeScanView: UIView {
     var scanLine: UIImageView! // 扫码线
     var introduceLabel: UILabel! // 提示文字label
     
-    
+    enum AZTimerState {
+        case move
+        case stop
+    }
     /// 扫码线移动方向
     private enum LineMoveDirect {
         case up
         case down
     }
     var timer: DispatchSourceTimer!
+    var timerState = AZTimerState.move
     private var lineDirection = LineMoveDirect.down
     
     convenience init(scanFrame: CGRect) {
@@ -46,12 +50,18 @@ class AZSwiftQrCodeScanView: UIView {
         weak var wkSelf = self
         timer.setEventHandler {
             var lineFrame = wkSelf!.scanLine.frame
-            switch wkSelf!.lineDirection {
-            case .up:
-                lineFrame.origin.y -= 1
-            case .down:
-                lineFrame.origin.y += 1
+            switch wkSelf!.timerState {
+            case .move:
+                switch wkSelf!.lineDirection {
+                case .up:
+                    lineFrame.origin.y -= 1
+                case .down:
+                    lineFrame.origin.y += 1
+                }
+            case .stop:
+                lineFrame.origin.y = wkSelf!.scanFrame.origin.y
             }
+            
             wkSelf?.scanLine.frame = lineFrame
             if lineFrame.origin.y >= wkSelf!.scanFrame.origin.y + wkSelf!.scanFrame.width - lineFrame.size.height {
                 wkSelf!.lineDirection = .up

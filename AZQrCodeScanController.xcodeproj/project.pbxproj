@@ -151,6 +151,7 @@
 		50B21DB61EEA749600F07A12 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = AZ;
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = Azreal;
 				TargetAttributes = {

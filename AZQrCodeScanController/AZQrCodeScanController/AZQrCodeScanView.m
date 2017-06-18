@@ -44,13 +44,17 @@ typedef NS_ENUM(NSUInteger, LineMoveDirect) {
     __weak AZQrCodeScanView *wkSelf = self;
     dispatch_source_set_event_handler(_timer, ^{
         CGRect lineFrame = wkSelf.scanLine.frame;
-        switch (wkSelf.lineDirection) {
-            case LineMoveDirectUp:
-                lineFrame.origin.y -= 1;
-                break;
-            case LineMoveDirectDown:
-                lineFrame.origin.y += 1;
-                break;
+        if (_timerState == AZTimerStateStop) {
+            lineFrame.origin.y = _scanFrame.origin.y;
+        } else {
+            switch (wkSelf.lineDirection) {
+                case LineMoveDirectUp:
+                    lineFrame.origin.y -= 1;
+                    break;
+                case LineMoveDirectDown:
+                    lineFrame.origin.y += 1;
+                    break;
+            }
         }
         wkSelf.scanLine.frame = lineFrame;
         

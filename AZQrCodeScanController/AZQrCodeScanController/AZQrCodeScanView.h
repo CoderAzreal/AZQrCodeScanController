@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+
+
+typedef NS_ENUM(NSUInteger, AZTimerState) {
+    AZTimerStateMove,
+    AZTimerStateStop
+};
+
 @interface AZQrCodeScanView : UIView
 
 @property (nonatomic, strong) dispatch_source_t timer;
@@ -20,6 +27,7 @@
 @property (nonatomic, strong) UIImageView *scanImageView;
 @property (nonatomic, strong) UIImageView *scanLine;
 @property (nonatomic, strong) UILabel *introduceLabel;
+@property (nonatomic, assign) AZTimerState timerState;
 
 - (instancetype)initWithScanFrame:(CGRect)scanFrame;
 
