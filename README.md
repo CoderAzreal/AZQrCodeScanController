@@ -30,7 +30,7 @@
 
 ### 效果图
 
-![这里写图片描述](http://img.blog.csdn.net/20170611140802869?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvUG9pbnRlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![示例图](http://upload-images.jianshu.io/upload_images/6499192-cf231dd9650d312d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 项目地址
 
