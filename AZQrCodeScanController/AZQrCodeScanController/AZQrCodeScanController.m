@@ -27,6 +27,7 @@
 @property (nonatomic, strong) UIImage *originalShadowImage;
 @property (nonatomic, strong) UIImage *originalBackgroundImage;
 
+
 @end
 
 @implementation AZQrCodeScanController
@@ -160,8 +161,8 @@
         self.originalShadowImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
         
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
-//        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
-//        self.navigationItem.rightBarButtonItem = albumItem;
+        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+        self.navigationItem.rightBarButtonItem = albumItem;
         self.navigationController.navigationBar.tintColor = _navigationTintColor;
         self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
         [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
@@ -181,7 +182,9 @@
 }
 
 - (void)albumClick {
-    
+    if ([_delegate respondsToSelector:@selector(onAZQrcodeAlbumButtonAction)]) {
+        [_delegate onAZQrcodeAlbumButtonAction];
+    }
 }
 
 - (void)dismissController {
@@ -313,6 +316,21 @@
 - (void)setIntroduceFrame:(CGRect)introduceFrame {
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
+}
+
+// MARK: - DataSource
+- (void)az_scanThisQrcodeImage:(UIImage *)image {
+    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
+    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
+    NSMutableArray *results = [NSMutableArray arrayWithCapacity:features.count];
+    for (NSInteger i = 0; i < [features count]; i++) {
+        CIQRCodeFeature *feature = [features objectAtIndex:i];
+        NSString *scannedResult = feature.messageString;
+        [results addObject:scannedResult];
+    }
+    if ([_delegate respondsToSelector:@selector(onAZQrcodeIdentifyComplete:)]) {
+        [_delegate onAZQrcodeIdentifyComplete:[NSArray arrayWithArray:results]];
+    }
 }
 
 @end

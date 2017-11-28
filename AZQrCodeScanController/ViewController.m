@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AZQrCodeScanController-Swift.h"
+#import "AZQrCodeScanController.h"
 
 @interface ViewController ()
 
@@ -27,7 +27,7 @@
 }
 
 - (void)btnClick {
-    AZSwiftQrCodeScanController *c = [[AZSwiftQrCodeScanController alloc] initWithScanComplete:^(NSString *result, AZSwiftQrCodeScanController *capture) {
+    AZQrCodeScanController *c = [[AZQrCodeScanController alloc] initWithScanComplete:^(NSString *result, AZQrCodeScanController *capture) {
         
         /// 扫描后使用alert提示
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Result" message:result preferredStyle:UIAlertControllerStyleAlert];
@@ -61,7 +61,7 @@
     //    c.appName = @"我是一个app";
     //    c.navigationTitleText = @"扫描";
     //    c.navigationBarAlpha = 0.5;
-    //    c.navigationBarTintColor = UIColor.redColor;
+    //    c. navigationBarTintColor = UIColor.redColor;
     //    c.navigationTintColor = UIColor.greenColor;
     
     [self.navigationController pushViewController:c animated:true];

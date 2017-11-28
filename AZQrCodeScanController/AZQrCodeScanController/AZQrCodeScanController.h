@@ -8,7 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AZQrCodeScanController : UIViewController
+@protocol AZQrCodeScanControllerDelegate <NSObject>
+/** 点击了右上角的相册按钮 */
+- (void)onAZQrcodeAlbumButtonAction;
+/** 二维码识别完成的回调 */
+- (void)onAZQrcodeIdentifyComplete:(NSArray<NSString *> *)result;
+
+@end
+
+@protocol AZQrCodeScanControllerDataSource <NSObject>
+/** 调用该方法识别图片中的二维码 */
+- (void)az_scanThisQrcodeImage:(UIImage *)image;
+
+@end
+
+@interface AZQrCodeScanController : UIViewController <AZQrCodeScanControllerDataSource>
 
 /**
  扫码线图片
@@ -89,6 +103,8 @@
  导航栏标题 默认为“二维码扫描”
  */
 @property (nonatomic, copy) NSString *navigationTitleText;
+
+@property (nonatomic, weak) id<AZQrCodeScanControllerDelegate> delegate;
 
 /**
  初始化方法(默认扫码区宽高为屏幕宽度-100, 居中显示)

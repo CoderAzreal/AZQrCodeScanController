@@ -36,7 +36,19 @@ class AZSwiftQrCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate 
         if session.canAddOutput(output) {
             session.addOutput(output)
         }
-        output.metadataObjectTypes = [AVMetadataObjectTypeQRCode, AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code]
+        output.metadataObjectTypes = [AVMetadataObjectTypeUPCECode,
+                                      AVMetadataObjectTypeCode39Code,
+                                      AVMetadataObjectTypeCode39Mod43Code,
+                                      AVMetadataObjectTypeEAN13Code,
+                                      AVMetadataObjectTypeEAN8Code,
+                                      AVMetadataObjectTypeCode93Code,
+                                      AVMetadataObjectTypeCode128Code,
+                                      AVMetadataObjectTypePDF417Code,
+                                      AVMetadataObjectTypeQRCode,
+                                      AVMetadataObjectTypeAztecCode,
+                                      AVMetadataObjectTypeInterleaved2of5Code,
+                                      AVMetadataObjectTypeITF14Code,
+                                      AVMetadataObjectTypeDataMatrixCode]
         output.rectOfInterest = CGRect(x: scanFrame.origin.y/AZ_screenHeight,
                                        y: (AZ_screenWidth-scanFrame.size.width-scanFrame.origin.x)/AZ_screenWidth,
                                        width: scanFrame.size.height/AZ_screenHeight,
@@ -49,9 +61,12 @@ class AZSwiftQrCodeScanDevice: NSObject, AVCaptureMetadataOutputObjectsDelegate 
     }
     
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+        
         if metadataObjects.count > 0 {
             session.stopRunning()
+            print(metadataObjects[0])
             let metadataObject = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+            
             let stringValue = metadataObject.stringValue
             guard stringValue != nil else {
                 complete?("")
