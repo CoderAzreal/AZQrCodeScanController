@@ -117,7 +117,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    
     [self stop];
     
     self.navigationController.navigationBar.shadowImage = _originalShadowImage;
@@ -161,6 +160,9 @@
         self.originalShadowImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
         
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
+        [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
+        self.navigationController.navigationBar.tintColor = _navigationTintColor;
+        self.navigationController.navigationBar.shadowImage = [UIImage new];
     }
 }
 
@@ -312,6 +314,7 @@
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
 }
+
 
 - (void)setShowAlbum:(BOOL)showAlbum {
     _showAlbum = showAlbum;
