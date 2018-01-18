@@ -9,7 +9,7 @@
 #import "AZQrCodeScanController.h"
 #import "AZQrCodeScanView.h"
 #import "AZQrCodeScanDevice.h"
-#import <TZImagePickerController.h>
+#import "TZImagePickerController.h"
 
 #define AZ_SCREENWIDTH [UIScreen mainScreen].bounds.size.width
 #define AZ_SCREENHEIGHT [UIScreen mainScreen].bounds.size.height
