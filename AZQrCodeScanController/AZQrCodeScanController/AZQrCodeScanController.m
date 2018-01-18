@@ -161,11 +161,6 @@
         self.originalShadowImage = [self.navigationController.navigationBar backgroundImageForBarMetrics:UIBarMetricsDefault];
         
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
-        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
-        self.navigationItem.rightBarButtonItem = albumItem;
-        self.navigationController.navigationBar.tintColor = _navigationTintColor;
-        self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
-        [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
     }
 }
 
@@ -316,6 +311,17 @@
 - (void)setIntroduceFrame:(CGRect)introduceFrame {
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
+}
+
+- (void)setShowAlbum:(BOOL)showAlbum {
+    _showAlbum = showAlbum;
+    if (showAlbum) {
+        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+        self.navigationItem.rightBarButtonItem = albumItem;
+        self.navigationController.navigationBar.tintColor = _navigationTintColor;
+        self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
+        [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
+    }
 }
 
 // MARK: - DataSource

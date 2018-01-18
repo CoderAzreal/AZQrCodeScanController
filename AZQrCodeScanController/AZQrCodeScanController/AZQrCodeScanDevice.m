@@ -43,7 +43,19 @@
             [_session addOutput:_output];
         }
         
-        _output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode, AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode128Code];
+        _output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode,
+                                        AVMetadataObjectTypeEAN13Code,
+                                        AVMetadataObjectTypeEAN8Code,
+                                        AVMetadataObjectTypeCode128Code,
+                                        AVMetadataObjectTypeUPCECode,
+                                        AVMetadataObjectTypeCode39Code,
+                                        AVMetadataObjectTypeCode39Mod43Code,
+                                        AVMetadataObjectTypeCode93Code,
+                                        AVMetadataObjectTypePDF417Code,
+                                        AVMetadataObjectTypeAztecCode,
+                                        AVMetadataObjectTypeInterleaved2of5Code,
+                                        AVMetadataObjectTypeITF14Code,
+                                        AVMetadataObjectTypeDataMatrixCode];
         
         _output.rectOfInterest = CGRectMake(frame.origin.y/AZ_SCREENHEIGHT,
                                             (AZ_SCREENWIDTH-frame.size.width-frame.origin.x)/AZ_SCREENWIDTH,

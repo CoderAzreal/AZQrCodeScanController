@@ -104,6 +104,11 @@
  */
 @property (nonatomic, copy) NSString *navigationTitleText;
 
+/**
+ 是否显示相册按钮，默认为否
+ */
+@property (nonatomic, assign) BOOL showAlbum;
+
 @property (nonatomic, weak) id<AZQrCodeScanControllerDelegate> delegate;
 
 /**
