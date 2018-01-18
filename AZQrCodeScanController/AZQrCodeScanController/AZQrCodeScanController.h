@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol AZQrCodeScanControllerDelegate <NSObject>
-/** 二维码识别完成的回调 */
-- (void)onAZQrcodeIdentifyComplete:(NSArray<NSString *> *)result;
-
-@end
-
 @interface AZQrCodeScanController : UIViewController
 
 /**
@@ -100,8 +94,6 @@
  是否显示相册按钮，默认为否
  */
 @property (nonatomic, assign) BOOL showAlbum;
-
-@property (nonatomic, weak) id<AZQrCodeScanControllerDelegate> delegate;
 
 /**
  初始化方法(默认扫码区宽高为屏幕宽度-100, 居中显示)
