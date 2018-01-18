@@ -5,12 +5,7 @@
 ### installation
 
 ```
-	// 全部导入(包含OC和swift)
 	pod 'AZQrCodeScanController'
-	// 只导入swift
-	pod 'AZQrCodeScanController/swift'
-	// 只导入OC
-	pod 'AZQrCodeScanController/oc'
 ```
 
 ### 初始化方法 (OC)
