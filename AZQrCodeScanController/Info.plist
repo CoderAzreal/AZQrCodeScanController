@@ -21,9 +21,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>s</string>
+	<string>需要您的同意，才可以扫描二维码</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>a</string>
+	<string>需要您的同意，才可以识别相册二维码</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
