@@ -9,20 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @protocol AZQrCodeScanControllerDelegate <NSObject>
-/** 点击了右上角的相册按钮 */
-- (void)onAZQrcodeAlbumButtonAction;
 /** 二维码识别完成的回调 */
 - (void)onAZQrcodeIdentifyComplete:(NSArray<NSString *> *)result;
 
 @end
 
-@protocol AZQrCodeScanControllerDataSource <NSObject>
-/** 调用该方法识别图片中的二维码 */
-- (void)az_scanThisQrcodeImage:(UIImage *)image;
-
-@end
-
-@interface AZQrCodeScanController : UIViewController <AZQrCodeScanControllerDataSource>
+@interface AZQrCodeScanController : UIViewController
 
 /**
  扫码线图片

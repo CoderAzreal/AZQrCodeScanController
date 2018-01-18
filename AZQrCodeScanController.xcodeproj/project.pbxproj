@@ -21,9 +21,11 @@
 		50B21DED1EEA74D800F07A12 /* AZQrCodeScanController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DE71EEA74D800F07A12 /* AZQrCodeScanController.m */; };
 		50B21DEE1EEA74D800F07A12 /* AZQrCodeScanDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DE91EEA74D800F07A12 /* AZQrCodeScanDevice.m */; };
 		50B21DEF1EEA74D800F07A12 /* AZQrCodeScanView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B21DEB1EEA74D800F07A12 /* AZQrCodeScanView.m */; };
+		C23F1697B789A0466053B498 /* libPods-AZQrCodeScanController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EF47A796E7E34D7B0950309 /* libPods-AZQrCodeScanController.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1EF47A796E7E34D7B0950309 /* libPods-AZQrCodeScanController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AZQrCodeScanController.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5042048E1EF00C5A006FEC3B /* AZSwiftQrCodeScanView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanView.swift; sourceTree = "<group>"; };
 		504204901EF00C8D006FEC3B /* AZSwiftQrCodeScanDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AZSwiftQrCodeScanDevice.swift; sourceTree = "<group>"; };
 		5042049E1EF0DF3D006FEC3B /* AZQrCode.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AZQrCode.bundle; sourceTree = "<group>"; };
@@ -45,6 +47,8 @@
 		50B21DE91EEA74D800F07A12 /* AZQrCodeScanDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZQrCodeScanDevice.m; sourceTree = "<group>"; };
 		50B21DEA1EEA74D800F07A12 /* AZQrCodeScanView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZQrCodeScanView.h; sourceTree = "<group>"; };
 		50B21DEB1EEA74D800F07A12 /* AZQrCodeScanView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZQrCodeScanView.m; sourceTree = "<group>"; };
+		8F0443CCBB2C090A9869570A /* Pods-AZQrCodeScanController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AZQrCodeScanController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AZQrCodeScanController/Pods-AZQrCodeScanController.debug.xcconfig"; sourceTree = "<group>"; };
+		F515CAA8E52BBFBD4CFD6A1E /* Pods-AZQrCodeScanController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AZQrCodeScanController.release.xcconfig"; path = "Pods/Target Support Files/Pods-AZQrCodeScanController/Pods-AZQrCodeScanController.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,12 +56,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C23F1697B789A0466053B498 /* libPods-AZQrCodeScanController.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08CD2FB879E4CA1A1BD80788 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8F0443CCBB2C090A9869570A /* Pods-AZQrCodeScanController.debug.xcconfig */,
+				F515CAA8E52BBFBD4CFD6A1E /* Pods-AZQrCodeScanController.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		5042A8BB1EECE35B004E06E7 /* AZQrCodeScanController-Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +88,8 @@
 			children = (
 				50B21DC01EEA749600F07A12 /* AZQrCodeScanController */,
 				50B21DBF1EEA749600F07A12 /* Products */,
+				08CD2FB879E4CA1A1BD80788 /* Pods */,
+				6BFAC81A0A45B61891B64E1D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -125,6 +141,14 @@
 			path = AZQrCodeScanController;
 			sourceTree = "<group>";
 		};
+		6BFAC81A0A45B61891B64E1D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1EF47A796E7E34D7B0950309 /* libPods-AZQrCodeScanController.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +156,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 50B21DD51EEA749600F07A12 /* Build configuration list for PBXNativeTarget "AZQrCodeScanController" */;
 			buildPhases = (
+				5964E4C205EE21CBEE7E27DC /* [CP] Check Pods Manifest.lock */,
 				50B21DBA1EEA749600F07A12 /* Sources */,
 				50B21DBB1EEA749600F07A12 /* Frameworks */,
 				50B21DBC1EEA749600F07A12 /* Resources */,
+				B814CDD095D36500170851FB /* [CP] Embed Pods Frameworks */,
+				6D9843AC542BC02CECE4F5D0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -194,6 +221,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5964E4C205EE21CBEE7E27DC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6D9843AC542BC02CECE4F5D0 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AZQrCodeScanController/Pods-AZQrCodeScanController-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B814CDD095D36500170851FB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AZQrCodeScanController/Pods-AZQrCodeScanController-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		50B21DBA1EEA749600F07A12 /* Sources */ = {
@@ -328,6 +403,7 @@
 		};
 		50B21DD61EEA749600F07A12 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F0443CCBB2C090A9869570A /* Pods-AZQrCodeScanController.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 82G9ZZBL2X;
@@ -342,6 +418,7 @@
 		};
 		50B21DD71EEA749600F07A12 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F515CAA8E52BBFBD4CFD6A1E /* Pods-AZQrCodeScanController.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 82G9ZZBL2X;

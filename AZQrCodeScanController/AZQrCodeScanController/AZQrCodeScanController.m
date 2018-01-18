@@ -9,17 +9,19 @@
 #import "AZQrCodeScanController.h"
 #import "AZQrCodeScanView.h"
 #import "AZQrCodeScanDevice.h"
+#import <TZImagePickerController.h>
 
 #define AZ_SCREENWIDTH [UIScreen mainScreen].bounds.size.width
 #define AZ_SCREENHEIGHT [UIScreen mainScreen].bounds.size.height
 #define SCANPADDING 50
 
-@interface AZQrCodeScanController ()
+@interface AZQrCodeScanController () <TZImagePickerControllerDelegate>
 
 @property (nonatomic, assign) CGRect scanFrame;
 @property (nonatomic, strong) AZQrCodeScanDevice *device;
 @property (nonatomic, strong) AZQrCodeScanView *scanView;
 @property (nonatomic, copy) void(^scanCompleteBlock)(NSString *result);
+@property (nonatomic, strong) void(^outCompleteBlock)(NSString *result, AZQrCodeScanController *capture);
 @property (nonatomic, strong) UINavigationBar *navigationBar;
 /// 记录进入该控制器前的导航栏状态
 @property (nonatomic, strong) NSDictionary *originalTitleTextAttributes;
@@ -38,7 +40,7 @@
     if (self = [super init]) {
         
         [self configInitValue];
-        
+        _outCompleteBlock = complete;
         CGFloat width = AZ_SCREENWIDTH - SCANPADDING*2;
         _scanFrame = CGRectMake((AZ_SCREENWIDTH-width)/2,
                                 (AZ_SCREENHEIGHT-width)/2,
@@ -48,7 +50,7 @@
         __weak AZQrCodeScanController *wkSelf = self;
         _scanCompleteBlock = ^(NSString *result) {
             wkSelf.scanView.timerState = AZTimerStateStop;
-            complete(result, wkSelf);
+            wkSelf.outCompleteBlock(result, wkSelf);
         };
     }
     return self;
@@ -57,13 +59,14 @@
 - (instancetype)initWithScanFrame:(CGRect)frame complete:(void (^)(NSString *, AZQrCodeScanController *))complete {
     
     if (self = [super init]) {
+        _outCompleteBlock = complete;
         [self configInitValue];
         _scanFrame = frame;
         _scanView = [[AZQrCodeScanView alloc] initWithScanFrame:_scanFrame];
         __weak AZQrCodeScanController *wkSelf = self;
         _scanCompleteBlock = ^(NSString *result) {
             wkSelf.scanView.timerState = AZTimerStateStop;
-            complete(result, wkSelf);
+            wkSelf.outCompleteBlock(result, wkSelf);
         };
     }
     return self;
@@ -179,9 +182,16 @@
 }
 
 - (void)albumClick {
-    if ([_delegate respondsToSelector:@selector(onAZQrcodeAlbumButtonAction)]) {
-        [_delegate onAZQrcodeAlbumButtonAction];
-    }
+    TZImagePickerController *picker = [[TZImagePickerController alloc] initWithMaxImagesCount:1 delegate:self];
+    picker.allowPickingGif = false;
+    picker.allowPickingVideo = false;
+    picker.allowCrop = false;
+    picker.allowTakePicture = false;
+    [self presentViewController:picker animated:true completion:nil];
+}
+
+- (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
+    [self scanThisQrcodeImage:photos.firstObject];
 }
 
 - (void)dismissController {
@@ -328,7 +338,7 @@
 }
 
 // MARK: - DataSource
-- (void)az_scanThisQrcodeImage:(UIImage *)image {
+- (void)scanThisQrcodeImage:(UIImage *)image {
     CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy: CIDetectorAccuracyHigh}];
     NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
     NSMutableArray *results = [NSMutableArray arrayWithCapacity:features.count];
@@ -337,8 +347,9 @@
         NSString *scannedResult = feature.messageString;
         [results addObject:scannedResult];
     }
-    if ([_delegate respondsToSelector:@selector(onAZQrcodeIdentifyComplete:)]) {
-        [_delegate onAZQrcodeIdentifyComplete:[NSArray arrayWithArray:results]];
+    __weak AZQrCodeScanController *wkSelf = self;
+    if (_outCompleteBlock) {
+        self.outCompleteBlock(results.firstObject, wkSelf);
     }
 }
 

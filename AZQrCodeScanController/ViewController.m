@@ -46,7 +46,7 @@
     }];
     
     
-//    c.showAlbum = true;
+    c.showAlbum = true;
     //    c.scanLineImage = [[UIImage alloc] init];
     //    c.scanImage = [[UIImage alloc] init];
     //    c.tintColor = UIColor.redColor;
@@ -60,7 +60,7 @@
     //    c.introduceFrame = CGRectMake(0, 0, 100, 100);
     //    c.appName = @"我是一个app";
     //    c.navigationTitleText = @"扫描";
-        c.navigationBarAlpha = 0.2;
+    c.navigationBarAlpha = 0.2;
 //        c.navigationBarTintColor = UIColor.redColor;
 //        c.navigationTintColor = UIColor.greenColor;
     
