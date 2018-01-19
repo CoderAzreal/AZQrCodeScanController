@@ -1,6 +1,7 @@
 # AZQrCodeScanController
 ### 介绍
-	AZQrCodeScanController 是对iOS原生框架AVFoundation, 一句话即可调用iOS原生扫码。
+    AZQrCodeScanController 是对iOS原生框架AVFoundation, 一句话即可调用iOS原生扫码与相册二维码识别
+    引用了 TZImagePickerController 的 1.9.8 版本
 
 ### installation
 
@@ -15,14 +16,6 @@
 	}];
 	[self presentViewController:c animated:true completion: nil];
 ```
-### 初始化方法(swift)
-``` swift
-	let c = AZQrCodeScanController { (result) in
-	    print(result)        
-    	}
-    	present(c!, animated: true, completion: nil)
-```
-
 ### 效果图
 
 ![示例图](http://upload-images.jianshu.io/upload_images/6499192-cf231dd9650d312d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
