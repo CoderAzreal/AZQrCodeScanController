@@ -14,6 +14,7 @@
 #define AZ_SCREENWIDTH [UIScreen mainScreen].bounds.size.width
 #define AZ_SCREENHEIGHT [UIScreen mainScreen].bounds.size.height
 #define SCANPADDING 50
+#define kDevice_Is_iPhoneX ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1125, 2436), [[UIScreen mainScreen] currentMode].size) : NO)
 
 @interface AZQrCodeScanController () <TZImagePickerControllerDelegate>
 
@@ -139,7 +140,18 @@
 
 - (void)configNavigation {
     if (self.navigationController == nil) {
-        _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 0, AZ_SCREENWIDTH, 64)];
+        if (@available(iOS 11.0, *)) {
+            UIView *barTopView = [[UIView alloc] init];
+            if (kDevice_Is_iPhoneX) {
+                barTopView.frame = CGRectMake(0, 0, AZ_SCREENWIDTH, 44);
+            } else {
+                barTopView.frame = CGRectMake(0, 0, AZ_SCREENWIDTH, 20);
+            }
+            [self.view addSubview:barTopView];
+            barTopView.backgroundColor = _navigationBarTintColor;
+            barTopView.alpha = _navigationBarAlpha;
+        }
+        _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, 20, AZ_SCREENWIDTH, 44)];
         _navigationBar.shadowImage = [[UIImage alloc] init];
         [_navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
         _navigationBar.tintColor = _navigationTintColor;
@@ -151,8 +163,10 @@
         UIBarButtonItem *closeItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:self action:@selector(dismissController)];
         navigationItem.leftBarButtonItem = closeItem;
         _navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: _navigationTintColor};
-//        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
-//        navigationItem.rightBarButtonItem = albumItem;
+        if (_showAlbum) {
+            UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+            navigationItem.rightBarButtonItem = albumItem;
+        }
         [self.view addSubview:_navigationBar];
     } else {
         self.navigationItem.title = _navigationTitleText;
@@ -166,6 +180,10 @@
         [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
         self.navigationController.navigationBar.tintColor = _navigationTintColor;
         self.navigationController.navigationBar.shadowImage = [UIImage new];
+        if (_showAlbum) {
+            UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
+            self.navigationItem.rightBarButtonItem = albumItem;
+        }
     }
 }
 
@@ -323,18 +341,6 @@
 - (void)setIntroduceFrame:(CGRect)introduceFrame {
     _introduceFrame = introduceFrame;
     _scanView.introduceLabel.frame = introduceFrame;
-}
-
-
-- (void)setShowAlbum:(BOOL)showAlbum {
-    _showAlbum = showAlbum;
-    if (showAlbum) {
-        UIBarButtonItem *albumItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(albumClick)];
-        self.navigationItem.rightBarButtonItem = albumItem;
-        self.navigationController.navigationBar.tintColor = _navigationTintColor;
-        self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
-        [self.navigationController.navigationBar setBackgroundImage:[self imageWithColor:_navigationBarTintColor alpha:_navigationBarAlpha] forBarMetrics:UIBarMetricsDefault];
-    }
 }
 
 // MARK: - DataSource

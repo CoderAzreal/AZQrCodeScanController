@@ -56,16 +56,17 @@
     //    c.introduceText = @"可以自动扫描的哦";
     //    c.introduceFontSize = 18;
     //    c.introduceFont = [UIFont systemFontOfSize:12];
-    //    c.introduceTextColor = UIColor.redColor;
+    //        c.introduceTextColor = UIColor.redColor;
     //    c.introduceFrame = CGRectMake(0, 0, 100, 100);
     //    c.appName = @"我是一个app";
     //    c.navigationTitleText = @"扫描";
-    c.navigationBarAlpha = 0.2;
-//        c.navigationBarTintColor = UIColor.redColor;
-//        c.navigationTintColor = UIColor.greenColor;
+    //    c.navigationBarAlpha = 0.2;
+    //        c.navigationBarTintColor = UIColor.redColor;
+    //        c.navigationTintColor = UIColor.greenColor;
     
-    [self.navigationController pushViewController:c animated:true];
+    //    [self.navigationController pushViewController:c animated:true];
+    
+    [self presentViewController:c animated:true completion:nil];
 }
-
 
 @end
